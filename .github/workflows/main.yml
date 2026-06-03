@@ -1,0 +1,25 @@
+name: 'Daily Cooe Capture & Send'
+
+on:
+  schedule:
+    # 9:50 PM IST = 16:20 UTC
+    - cron: '20 16 * * *'
+  workflow_dispatch:
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install requests
+      - name: Run capture script
+        env:
+          COOE_API_TOKEN: ${{ secrets.COOE_API_TOKEN }}
+          COOE_COOKIE: ${{ secrets.COOE_COOKIE }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python capture.py
