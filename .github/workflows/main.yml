@@ -2,7 +2,7 @@ name: 'Daily Cooe Capture & Send'
 
 on:
   schedule:
-    - cron: '50 16 * * *'   # 10:20 PM IST (16:50 UTC)
+    - cron: '0 17 * * *'   # 10:20 PM IST (16:50 UTC)
   workflow_dispatch:
   push:
     branches: [ "main", "master" ]
