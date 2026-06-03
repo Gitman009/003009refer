@@ -1,7 +1,12 @@
+import sys
+import io
 import os
 import requests
 import time
 from datetime import datetime
+
+# Force UTF-8 for console (optional, but safe)
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 # ==========================================
 # READ FROM ENVIRONMENT VARIABLES
@@ -70,6 +75,7 @@ all_data = {}
 
 print("\n" + "="*80)
 print("🚀 LIVE CAPTURE STARTED")
+print("Mapping: Red/Red+Violet = e , Green/Green+Violet = o , Violet = v")
 print("="*80)
 
 # ==========================================
@@ -105,20 +111,22 @@ for category in categories:
                     stop_category = True
 
                 if ending in selected_endings:
-                    # Determine color
-                    color = ""
-                    if item.get("is_red") and item.get("is_violet"):
-                        color = "♥️💜"
-                    elif item.get("is_green") and item.get("is_violet"):
-                        color = "💚💜"
-                    elif item.get("is_red"):
-                        color = "♥️"
-                    elif item.get("is_green"):
-                        color = "💚"
-                    elif item.get("is_violet"):
-                        color = "💜"
+                    # Apply the required mapping:
+                    # Red or Red+Violet -> 'e'
+                    # Green or Green+Violet -> 'o'
+                    # Violet only -> 'v'
+                    is_red = item.get("is_red")
+                    is_green = item.get("is_green")
+                    is_violet = item.get("is_violet")
+
+                    if is_red or (is_red and is_violet):
+                        color = "e"
+                    elif is_green or (is_green and is_violet):
+                        color = "o"
+                    elif is_violet:
+                        color = "v"
                     else:
-                        color = "??"
+                        color = "?"   # unknown
 
                     category_data[ending] = color
                     print(f"✅ {ending} → {color}")
